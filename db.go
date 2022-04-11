@@ -4,8 +4,6 @@ import (
 	"context"
 )
 
-const dbName = "chat"
-
 type DB interface {
 	Ping(ctx context.Context) error
 	AddUser(ctx context.Context, user *User) error

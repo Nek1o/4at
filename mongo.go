@@ -12,6 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const dbName = "chat"
+
 type mongoDB struct {
 	client          *mongo.Client
 	usersCollection *mongo.Collection
