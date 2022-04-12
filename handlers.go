@@ -144,5 +144,3 @@ func (s *ChatServer) GetUserRooms(c *gin.Context) {
 	}
 
 }
-
-// TODO student questions
