@@ -1,16 +1,22 @@
 package main
 
+import (
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+)
+
 func (s *ChatServer) configureRoutes() {
 	api := s.engine.Group("/api")
 
 	v1 := api.Group("/v1")
 	{
 		v1.GET("/ping", s.Ping)
+		v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
 	users := v1.Group("/users")
 	{
-		users.POST("/check/:username/", s.UserExists)
+		users.GET("/check/:username", s.UserExists)
 	}
 
 	rooms := v1.Group("/rooms")

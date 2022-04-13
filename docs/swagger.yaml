@@ -1,0 +1,260 @@
+basePath: /api/v1
+definitions:
+  main.CheckUser:
+    properties:
+      exists:
+        type: boolean
+    type: object
+  main.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  main.Room:
+    properties:
+      created_at:
+        type: string
+      name:
+        type: string
+      owner:
+        type: string
+      participants:
+        items:
+          type: string
+        type: array
+      uuid:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: nikita.volchenkov1@gmail.com
+    name: Nekiio
+  description: This is a 4at API. Contact @Nekiio at telegram for support
+  termsOfService: http://swagger.io/terms/
+  title: 4at Swagger API
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      consumes:
+      - '*/*'
+      description: Get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Ping the server.
+      tags:
+      - Ping
+  /rooms/{name}:
+    get:
+      consumes:
+      - '*/*'
+      description: Get a chat room.
+      parameters:
+      - default: Tolya's room
+        description: room name
+        in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Room'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Get a chat room
+      tags:
+      - Room
+  /rooms/{name}/:
+    delete:
+      consumes:
+      - '*/*'
+      description: Remove a room from chat.
+      parameters:
+      - default: Tolya's room
+        description: room name
+        in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Remove a room from chat
+      tags:
+      - Room
+    post:
+      consumes:
+      - '*/*'
+      description: Add new a chat room.
+      parameters:
+      - default: Tolya's room
+        description: room name
+        in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Room'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Add a new chat room
+      tags:
+      - Room
+  /rooms/by-owner:
+    get:
+      consumes:
+      - '*/*'
+      description: Get user's chat rooms.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Room'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Get user's chat rooms
+      tags:
+      - Room
+  /rooms/join/{name}/:
+    post:
+      consumes:
+      - '*/*'
+      description: Join a chat room.
+      parameters:
+      - default: Tolya's room
+        description: room name
+        in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Room'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Join a chat room
+      tags:
+      - Room
+  /rooms/leave/{name}/:
+    post:
+      consumes:
+      - '*/*'
+      description: Leave a chat room.
+      parameters:
+      - default: Tolya's room
+        description: room name
+        in: path
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Room'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      security:
+      - Username: []
+      - API token: []
+      summary: Leave a chat room
+      tags:
+      - Room
+  /users/check/{username}:
+    get:
+      consumes:
+      - '*/*'
+      description: Check that the user exists.
+      parameters:
+      - default: Tolya
+        description: username to check
+        in: path
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.CheckUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Check that the user exists
+      tags:
+      - User
+schemes:
+- http
+securityDefinitions:
+  API token:
+    in: header
+    name: X-App-Name
+    type: apiKey
+  Username:
+    in: header
+    name: X-User-Name
+    type: apiKey
+swagger: "2.0"

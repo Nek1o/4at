@@ -19,3 +19,7 @@ func (u User) ToBSON() bson.D {
 type AddUser struct {
 	Username string `json:"username"`
 }
+
+type CheckUser struct {
+	Exists bool `json:"exists"`
+}
