@@ -406,7 +406,7 @@ const docTemplate = `{
     "securityDefinitions": {
         "API token": {
             "type": "apiKey",
-            "name": "X-App-Name",
+            "name": "X-App-Token",
             "in": "header"
         },
         "Username": {

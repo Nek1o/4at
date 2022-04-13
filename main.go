@@ -26,7 +26,7 @@ import (
 
 // @securityDefinitions.apikey  API token
 // @in header
-// @name X-App-Name
+// @name X-App-Token
 func main() {
 	ctx := context.Background()
 
@@ -35,10 +35,7 @@ func main() {
 		log.Fatalf("could not init a db connection: %v", err)
 	}
 
-	// gin.SetMode(gin.ReleaseMode)
 	app := NewChatServer(gin.Default(), db)
 
 	app.Run()
 }
-
-// TODO add x-app-token header

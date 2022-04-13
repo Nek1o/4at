@@ -251,7 +251,7 @@ schemes:
 securityDefinitions:
   API token:
     in: header
-    name: X-App-Name
+    name: X-App-Token
     type: apiKey
   Username:
     in: header

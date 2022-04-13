@@ -8,13 +8,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+var appToken string
+
 func (s *ChatServer) Authorization(c *gin.Context) {
-	// appHeader := c.Request.Header.Get("x-app-token")
-	// TODO add token check
-	// if appHeader == TOKEN_CONST {
-	// 	c.AbortWithStatus(http.StatusUnauthorized)
-	// 	return
-	// }
+	appHeader := c.Request.Header.Get("x-app-token")
+	if appHeader != appToken {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 
 	usernameHeader := c.Request.Header.Get("x-user-name")
 	if usernameHeader == "" {
