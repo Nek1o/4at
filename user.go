@@ -6,15 +6,13 @@ import (
 )
 
 type User struct {
-	ID       primitive.ObjectID `json:"id" bson:"_id"`
+	ID       primitive.ObjectID `bson:"_id"`
 	Username string             `json:"username" bson:"username"`
-	Token    string             `json:"token" bson:"token"`
 }
 
 func (u User) ToBSON() bson.D {
 	return bson.D{
 		{Key: "username", Value: u.Username},
-		{Key: "token", Value: u.Token},
 	}
 }
 

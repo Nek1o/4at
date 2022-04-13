@@ -8,7 +8,7 @@ import (
 )
 
 type Room struct {
-	ID           primitive.ObjectID `json:"-" bson:"_id"`
+	ID           primitive.ObjectID `bson:"_id"`
 	Name         string             `json:"name" bson:"name"`
 	Owner        string             `json:"owner" bson:"owner"`
 	UUID         string             `json:"uuid" bson:"uuid"`

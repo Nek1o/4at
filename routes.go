@@ -15,7 +15,7 @@ func (s *ChatServer) configureRoutes() {
 	}
 
 	rooms := v1.Group("/rooms")
-	rooms.Use(s.Authentication)
+	rooms.Use(s.Authorization)
 	{
 		rooms.POST("/add", s.AddRoom)
 		rooms.POST("/remove", s.RemoveRoom)

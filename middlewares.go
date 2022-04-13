@@ -1,37 +1,43 @@
 package main
 
 import (
+	"errors"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (s *ChatServer) Authentication(c *gin.Context) {
-	header := strings.Split(c.Request.Header.Get("authorization"), " ")
-	if len(header) != 2 {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		c.Abort()
+func (s *ChatServer) Authorization(c *gin.Context) {
+	// appHeader := c.Request.Header.Get("x-app-token")
+	// TODO add token check
+	// if appHeader == TOKEN_CONST {
+	// 	c.AbortWithStatus(http.StatusUnauthorized)
+	// 	return
+	// }
+
+	usernameHeader := c.Request.Header.Get("x-user-name")
+	if usernameHeader == "" {
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	if header[0] != "Bearer" && header[1] == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid auth header value, shoud be \"Bearer <token>\""})
-		c.Abort()
-		return
-	}
-
-	token := header[1]
-
-	user, err := s.db.GetUser(c.Request.Context(), "", token)
+	user, err := s.db.GetUser(c.Request.Context(), usernameHeader)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		c.Abort()
+		// if there is no user with such username, then add one
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			user := &User{Username: usernameHeader}
+			s.db.AddUser(c.Request.Context(), user)
+			c.Set("user", user)
+			c.Next()
+			return
+		}
+
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
 	c.Set("user", user)
-
 	c.Next()
 }
 

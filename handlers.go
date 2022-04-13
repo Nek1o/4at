@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -20,10 +19,7 @@ func (s *ChatServer) AddUser(c *gin.Context) {
 		return
 	}
 
-	user := User{
-		Username: addUser.Username,
-		Token:    uuid.NewString(),
-	}
+	user := User{Username: addUser.Username}
 	if err := s.db.AddUser(c.Request.Context(), &user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

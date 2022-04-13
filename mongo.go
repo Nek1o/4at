@@ -52,18 +52,9 @@ func NewMongoDB(ctx context.Context, host string, port int) (*mongoDB, error) {
 		return nil, err
 	}
 
-	_, err = usersCollection.Indexes().CreateMany(
+	_, err = usersCollection.Indexes().CreateOne(
 		ctx,
-		[]mongo.IndexModel{
-			{
-				Keys:    bson.M{"username": 1},
-				Options: options.Index().SetUnique(true),
-			},
-			{
-				Keys:    bson.M{"token": 1},
-				Options: options.Index().SetUnique(true),
-			},
-		})
+		mongo.IndexModel{Keys: bson.M{"username": 1}, Options: options.Index().SetUnique(true)})
 	if err != nil {
 		return nil, err
 	}
@@ -80,16 +71,8 @@ func (m *mongoDB) AddUser(ctx context.Context, user *User) error {
 	return err
 }
 
-func (m *mongoDB) GetUser(ctx context.Context, username, token string) (*User, error) {
-	filters := make(bson.D, 0, 2)
-	if username != "" {
-		filters = append(filters, bson.E{Key: "username", Value: username})
-	}
-	if token != "" {
-		filters = append(filters, bson.E{Key: "token", Value: token})
-	}
-
-	res := m.usersCollection.FindOne(ctx, filters)
+func (m *mongoDB) GetUser(ctx context.Context, username string) (*User, error) {
+	res := m.usersCollection.FindOne(ctx, bson.M{"username": username})
 	if err := res.Err(); err != nil {
 		return nil, err
 	}
@@ -103,7 +86,7 @@ func (m *mongoDB) GetUser(ctx context.Context, username, token string) (*User, e
 }
 
 func (m *mongoDB) UserExists(ctx context.Context, username string) (bool, error) {
-	_, err := m.GetUser(ctx, username, "")
+	_, err := m.GetUser(ctx, username)
 	if err == nil {
 		return true, nil
 	}
@@ -189,7 +172,7 @@ func (m *mongoDB) GetUserRooms(ctx context.Context, user *User) ([]*Room, error)
 		return nil, err
 	}
 
-	var rooms []*Room
+	rooms := make([]*Room, 0)
 	for cur.Next(ctx) {
 		var room *Room
 		if err := cur.Decode(&room); err != nil {
