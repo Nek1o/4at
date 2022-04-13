@@ -16,7 +16,7 @@ import (
 // @contact.name Nekiio
 // @contact.email nikita.volchenkov1@gmail.com
 
-// @host localhost:8080
+// @host memenid.space:6969
 // @BasePath /api/v1
 // @schemes http
 

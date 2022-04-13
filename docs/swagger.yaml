@@ -25,7 +25,7 @@ definitions:
       uuid:
         type: string
     type: object
-host: localhost:8080
+host: memenid.space:6969
 info:
   contact:
     email: nikita.volchenkov1@gmail.com
