@@ -22,8 +22,5 @@ func main() {
 }
 
 // TODO add x-app-token header
-// TODO add x-user-name header
 
-// TODO rework auth process
-// TODO rework routes
 // TODO add swagger

@@ -29,13 +29,13 @@ func (s *ChatServer) AddUser(c *gin.Context) {
 }
 
 func (s *ChatServer) UserExists(c *gin.Context) {
-	var getUser GetUser
-	if err := c.ShouldBindJSON(&getUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	username := c.Param("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid username"})
 		return
 	}
 
-	exists, err := s.db.UserExists(c.Request.Context(), getUser.Username)
+	exists, err := s.db.UserExists(c.Request.Context(), username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -46,14 +46,13 @@ func (s *ChatServer) UserExists(c *gin.Context) {
 
 func (s *ChatServer) AddRoom(c *gin.Context) {
 	user := s.GetUser(c)
-
-	var addRoom AddRoom
-	if err := c.ShouldBindJSON(&addRoom); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	roomName := c.Param("name")
+	if roomName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid room name"})
 		return
 	}
 
-	if room, err := s.db.AddRoom(c.Request.Context(), addRoom.Name, user); err != nil {
+	if room, err := s.db.AddRoom(c.Request.Context(), roomName, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, room)
@@ -62,14 +61,9 @@ func (s *ChatServer) AddRoom(c *gin.Context) {
 
 func (s *ChatServer) RemoveRoom(c *gin.Context) {
 	user := s.GetUser(c)
+	roomName := c.Param("name")
 
-	var removeRoom RemoveRoom
-	if err := c.ShouldBindJSON(&removeRoom); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := s.db.RemoveRoom(c.Request.Context(), removeRoom.Name, user); err != nil {
+	if err := s.db.RemoveRoom(c.Request.Context(), roomName, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -79,14 +73,9 @@ func (s *ChatServer) RemoveRoom(c *gin.Context) {
 
 func (s *ChatServer) JoinRoom(c *gin.Context) {
 	user := s.GetUser(c)
+	roomName := c.Param("name")
 
-	var joinRoom JoinRoom
-	if err := c.ShouldBindJSON(&joinRoom); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if room, err := s.db.JoinRoom(c.Request.Context(), joinRoom.Name, user); err != nil {
+	if room, err := s.db.JoinRoom(c.Request.Context(), roomName, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, room)
@@ -95,14 +84,9 @@ func (s *ChatServer) JoinRoom(c *gin.Context) {
 
 func (s *ChatServer) LeaveRoom(c *gin.Context) {
 	user := s.GetUser(c)
+	roomName := c.Param("name")
 
-	var leaveRoom LeaveRoom
-	if err := c.ShouldBindJSON(&leaveRoom); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := s.db.LeaveRoom(c.Request.Context(), leaveRoom.Name, user); err != nil {
+	if err := s.db.LeaveRoom(c.Request.Context(), roomName, user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -111,14 +95,10 @@ func (s *ChatServer) LeaveRoom(c *gin.Context) {
 }
 
 func (s *ChatServer) GetRoom(c *gin.Context) {
-	var getRoom GetRoom
-	if err := c.ShouldBindJSON(&getRoom); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	roomName := c.Param("name")
 
 	var room *Room
-	room, err := s.db.GetRoom(c.Request.Context(), getRoom.Name)
+	room, err := s.db.GetRoom(c.Request.Context(), roomName)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})

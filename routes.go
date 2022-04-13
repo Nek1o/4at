@@ -10,18 +10,17 @@ func (s *ChatServer) configureRoutes() {
 
 	users := v1.Group("/users")
 	{
-		users.POST("/add", s.AddUser)
-		users.POST("/check", s.UserExists)
+		users.POST("/check/:username/", s.UserExists)
 	}
 
 	rooms := v1.Group("/rooms")
 	rooms.Use(s.Authorization)
 	{
-		rooms.POST("/add", s.AddRoom)
-		rooms.POST("/remove", s.RemoveRoom)
-		rooms.POST("/join", s.JoinRoom)
-		rooms.POST("/leave", s.LeaveRoom)
-		rooms.POST("/get", s.GetRoom)
-		rooms.GET("/get-by-owner", s.GetUserRooms)
+		rooms.POST("/:name/", s.AddRoom)
+		rooms.DELETE("/:name/", s.RemoveRoom)
+		rooms.POST("/join/:name/", s.JoinRoom)
+		rooms.POST("/leave/:name/", s.LeaveRoom)
+		rooms.GET("/:name", s.GetRoom)
+		rooms.GET("/by-owner", s.GetUserRooms)
 	}
 }

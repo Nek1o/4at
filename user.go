@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	ID       primitive.ObjectID `bson:"_id"`
+	ID       primitive.ObjectID `json:"-" bson:"_id"`
 	Username string             `json:"username" bson:"username"`
 }
 
@@ -17,9 +17,5 @@ func (u User) ToBSON() bson.D {
 }
 
 type AddUser struct {
-	Username string `json:"username"`
-}
-
-type GetUser struct {
 	Username string `json:"username"`
 }

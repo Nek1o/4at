@@ -8,7 +8,7 @@ import (
 )
 
 type Room struct {
-	ID           primitive.ObjectID `bson:"_id"`
+	ID           primitive.ObjectID `json:"-" bson:"_id"`
 	Name         string             `json:"name" bson:"name"`
 	Owner        string             `json:"owner" bson:"owner"`
 	UUID         string             `json:"uuid" bson:"uuid"`
@@ -24,24 +24,4 @@ func (r *Room) ToBSON() bson.D {
 		{Key: "created_at", Value: r.CreatedAt},
 		{Key: "participants", Value: r.Participants},
 	}
-}
-
-type AddRoom struct {
-	Name string `json:"name"`
-}
-
-type RemoveRoom struct {
-	Name string `json:"name"`
-}
-
-type JoinRoom struct {
-	Name string `json:"name"`
-}
-
-type LeaveRoom struct {
-	Name string `json:"name"`
-}
-
-type GetRoom struct {
-	Name string `json:"name"`
 }
