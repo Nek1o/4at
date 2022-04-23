@@ -1,11 +1,15 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func (s *ChatServer) configureRoutes() {
+	// allow all cors
+	s.engine.Use(cors.Default())
+
 	api := s.engine.Group("/api")
 
 	v1 := api.Group("/v1")
