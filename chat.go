@@ -4,12 +4,13 @@ import "github.com/gin-gonic/gin"
 
 type ChatServer struct {
 	engine *gin.Engine
-	db DB
+	db     DB
 }
 
 func NewChatServer(engine *gin.Engine, db DB) ChatServer {
 	s := ChatServer{engine, db}
-	s.configureRoutes() 
+	s.configureRoutes()
+	s.configureCORS()
 	return s
 }
 

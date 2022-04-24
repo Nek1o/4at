@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// set in init func
 var appToken string
 
 func (s *ChatServer) Authorization(c *gin.Context) {

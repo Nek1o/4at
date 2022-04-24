@@ -7,9 +7,6 @@ import (
 )
 
 func (s *ChatServer) configureRoutes() {
-	// allow all cors
-	s.engine.Use(cors.Default())
-
 	api := s.engine.Group("/api")
 
 	v1 := api.Group("/v1")
@@ -33,4 +30,12 @@ func (s *ChatServer) configureRoutes() {
 		rooms.GET("/:name", s.GetRoom)
 		rooms.GET("/by-owner", s.GetUserRooms)
 	}
+}
+
+func (s *ChatServer) configureCORS() {
+	s.engine.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowCredentials: true,
+		AllowHeaders:     []string{"X-App-Token", "X-User-Name", "Origin", ""},
+	}))
 }
