@@ -9,8 +9,8 @@ type ChatServer struct {
 
 func NewChatServer(engine *gin.Engine, db DB) ChatServer {
 	s := ChatServer{engine, db}
-	s.configureRoutes()
 	s.configureCORS()
+	s.configureRoutes()
 	return s
 }
 
