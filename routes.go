@@ -37,5 +37,6 @@ func (s *ChatServer) configureCORS() {
 		AllowAllOrigins:  true,
 		AllowCredentials: true,
 		AllowHeaders:     []string{"X-App-Token", "X-User-Name", "Origin", ""},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH", "HEAD", "OPTIONS"},
 	}))
 }
